@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Team-Ergebnis für {{ results.team_name }}</h2>
+<p>Platzhalter-Ergebnisse:</p>
+<ul>
+    <li>D: {{ results.d }}</li>
+    <li>I: {{ results.i }}</li>
+    <li>S: {{ results.s }}</li>
+    <li>C: {{ results.c }}</li>
+</ul>
+
+<p>Später kommt hier eine richtige Auswertung mit Diagramm & Text.</p>
+{% endblock %}

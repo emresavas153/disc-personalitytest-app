@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Startseite</h2>
+<p>Wähle deine Rolle:</p>
+
+<ul>
+    <li><a href="{{ url_for('workshop_new') }}">Ich bin Host</a></li>
+    <li><a href="{{ url_for('join_get') }}">Ich bin Teilnehmer:in</a></li>
+</ul>
+{% endblock %}

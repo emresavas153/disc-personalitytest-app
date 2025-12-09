@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>DISC-Test – Workshop {{ code }}</h2>
+<p>Hier kommen später die Fragen. Im Moment nur Platzhalter.</p>
+<form action="{{ url_for('test_submit', code=code) }}" method="post">
+    <p>Beispielfrage: Ich übernehme gerne die Führung.</p>
+    <label><input type="radio" name="q1" value="1"> Stimme gar nicht zu</label><br>
+    <label><input type="radio" name="q1" value="5"> Stimme voll zu</label><br>
+    <button type="submit">Antworten abschicken</button>
+</form>
+{% endblock %}

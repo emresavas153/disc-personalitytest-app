@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Workshop beitreten</h2>
+<form action="{{ url_for('join_post') }}" method="post">
+    <label for="name">Dein Name:</label>
+    <input type="text" id="name" name="name">
+    <br>
+    <label for="code">Workshop-Code:</label>
+    <input type="text" id="code" name="code" value="ABCD">
+    <br>
+    <button type="submit">Beitreten</button>
+</form>
+{% endblock %}
