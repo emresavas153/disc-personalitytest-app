@@ -1,9 +1,13 @@
 {% extends "base.html" %}
 {% block content %}
 <h2>Neuen Workshop erstellen</h2>
+<p>Lege einen neuen Workshop an und teile den Code anschließend mit deinem Team.</p>
+
 <form action="{{ url_for('workshop_create') }}" method="post">
-    <label for="title">Workshop-Titel:</label>
-    <input type="text" id="title" name="title">
-    <button type="submit">Workshop anlegen</button>
+    <div class="form-group">
+        <label for="title">Workshop-Titel</label>
+        <input type="text" id="title" name="title" placeholder="z.B. Team-Workshop Marketing">
+    </div>
+    <button type="submit" class="btn btn-primary">Workshop anlegen</button>
 </form>
 {% endblock %}
