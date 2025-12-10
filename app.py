@@ -26,7 +26,7 @@ def workshop_create():
 @app.route("/workshops/<code>/host", methods=["GET"])
 def host_dashboard(code):
     # Host-Ansicht (Übersicht über Teilnehmer & Ergebnisse)
-    return render_template("host_dashboard.html", code=code)
+    return render_template("host_dashboard.html", code=code, questions=questions)
 
 
 @app.route("/join", methods=["GET"])

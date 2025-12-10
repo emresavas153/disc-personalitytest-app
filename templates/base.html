@@ -2,19 +2,27 @@
 <html lang="de">
 <head>
     <meta charset="UTF-8">
-    <title>DISC Workshop</title>
+    <title>DISC personalitytest</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
-<header>
-    <h1>DISC Workshop App</h1>
-    <nav>
-        <a href="{{ url_for('index') }}">Home</a>
-    </nav>
-    <hr>
+<header class="topbar">
+    <div class="topbar-inner">
+        <div class="brand">
+            <span class="brand-logo">DISC</span>
+            <span class="brand-text">personalitytest</span>
+        </div>
+        <nav class="nav-links">
+            <a href="{{ url_for('index') }}">Home</a>
+        </nav>
+    </div>
 </header>
 
-<main>
-    {% block content %}{% endblock %}
+<main class="page">
+    <div class="card">
+        {% block content %}{% endblock %}
+    </div>
 </main>
 </body>
 </html>
