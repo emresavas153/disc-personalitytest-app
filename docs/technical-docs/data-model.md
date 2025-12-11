@@ -9,7 +9,7 @@ nav_order: 2
 
 {: .no_toc }
 # Data model
-![ER Diagram](assets/images/erd_personalitytest.png)
+![ER Diagram](../assets/images/erd_personalitytest.png)
 
 <details open markdown="block">
 {: .text-delta }
@@ -47,7 +47,7 @@ Diese Struktur ermöglicht es, Teilnehmer in Workshops zu organisieren, DISC-Fra
 - Ein Participant gehört zu einem Workshop
 - Ein Participant hat mehrere Answers
 
----
+
 
 ## Question
 
@@ -61,7 +61,6 @@ Diese Struktur ermöglicht es, Teilnehmer in Workshops zu organisieren, DISC-Fra
 
 - Eine Question hat mehrere Answers
 
----
 
 ## Answer
 
