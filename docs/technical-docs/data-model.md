@@ -9,7 +9,7 @@ nav_order: 2
 
 {: .no_toc }
 # Data model
-![ER Diagram](assets/images/erd_personalitytest.png)
+![ER Diagram](..assets/images/erd_personalitytest.png)
 
 <details open markdown="block">
 {: .text-delta }
