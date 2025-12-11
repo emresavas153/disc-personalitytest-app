@@ -5,7 +5,7 @@ nav_order: 2
 ---
 
 # Data model
-![ER Diagram](assets/images/erd_personalitytest.png)
+![ER Diagram]({{ '/assets/images/erd_personalitytest.png' | relative_url }})
 
 <details open markdown="block">
 {: .text-delta }
