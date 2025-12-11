@@ -4,14 +4,8 @@ parent: Technical Docs
 nav_order: 2
 ---
 
-{: .label }
-[Jane Dane]
-
-
 # Data model
 ![ER Diagram](../assets/images/erd-personalitytest.png)
-
-<details open markdown="block">
 
 
 
