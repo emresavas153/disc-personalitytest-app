@@ -7,12 +7,12 @@ nav_order: 2
 {: .label }
 [Jane Dane]
 
-{: .no_toc }
+
 # Data model
-![ER Diagram](../assets/images/erd_personalitytest.png)
+![ER Diagram](../assets/images/erd-personalitytest.png)
 
 <details open markdown="block">
-{: .text-delta }
+
 
 
 Das Datenmodell der DISC-Workshop-App besteht aus vier zentralen Entitäten: **Workshop**, **Participant**, **Question** und **Answer**.  
