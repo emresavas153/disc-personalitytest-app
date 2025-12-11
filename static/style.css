@@ -1,0 +1,264 @@
+/* Grundlayout */
+:root {
+    --bg: #0f172a; 
+    --bg-soft: #111827;
+    --card-bg: #0b1120;
+    --accent: #38bdf8;
+    --accent-soft: rgba(56, 189, 248, 0.15);
+    --accent-strong: #0ea5e9;
+    --text: #e5e7eb;
+    --muted: #9ca3af;
+    --danger: #f97373;
+    --border: #1f2937;
+    --radius-lg: 18px;
+    --radius-full: 999px;
+    --shadow-soft: 0 18px 45px rgba(15, 23, 42, 0.65);
+    --spacing: 1.25rem;
+    --font-main: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    background: radial-gradient(circle at top, #1f2937 0, #020617 55%);
+    color: var(--text);
+    font-family: var(--font-main);
+    display: flex;
+    flex-direction: column;
+}
+
+/* Topbar */
+.topbar {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    background: linear-gradient(to right, rgba(15,23,42,0.95), rgba(15,23,42,0.85));
+    border-bottom: 1px solid rgba(15, 23, 42, 0.8);
+    backdrop-filter: blur(18px);
+}
+
+.topbar-inner {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0.75rem 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+}
+
+.brand-logo {
+    font-weight: 800;
+    font-size: 1rem;
+    color: #38bdf8; 
+    letter-spacing: 0.05em;
+
+}
+
+
+.brand-text {
+    font-weight: 600;
+    font-size: 0.95rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--muted);
+}
+
+.nav-links a {
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 0.9rem;
+    padding: 0.4rem 0.8rem;
+    border-radius: var(--radius-full);
+    transition: background 0.15s ease, color 0.15s ease;
+}
+
+.nav-links a:hover {
+    background: rgba(15,23,42,0.9);
+    color: var(--accent);
+}
+
+/* Seite + Card */
+.page {
+    flex: 1;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 2.5rem 1rem 3.5rem;
+}
+
+.card {
+    width: 100%;
+    max-width: 860px;
+    background: radial-gradient(circle at top left, rgba(56,189,248,0.08), transparent 55%),
+                radial-gradient(circle at bottom right, rgba(94,234,212,0.06), transparent 60%),
+                #020617;
+    border-radius: 24px;
+    border: 1px solid rgba(148, 163, 184, 0.16);
+    box-shadow: var(--shadow-soft);
+    padding: 2.2rem clamp(1.6rem, 3vw, 2.4rem);
+}
+
+/* Typografie */
+h1, h2, h3 {
+    margin-top: 0;
+    font-weight: 600;
+}
+
+h1 {
+    font-size: clamp(1.8rem, 2.2vw, 2.1rem);
+    letter-spacing: 0.03em;
+}
+
+h2 {
+    font-size: clamp(1.4rem, 1.8vw, 1.7rem);
+}
+
+p {
+    margin: 0.3rem 0 0.8rem;
+    color: var(--muted);
+}
+
+ul {
+    padding-left: 1.1rem;
+}
+
+/* Buttons */
+.btn-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.8rem;
+    margin-top: 6.4rem;
+}
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.6rem 1.4rem;
+    border-radius: var(--radius-full);
+    border: 1px solid transparent;
+    font-size: 0.95rem;
+    font-weight: 500;
+    text-decoration: none;
+    cursor: pointer;
+    transition: transform 0.1s ease, box-shadow 0.15s ease, background 0.15s ease, border-color 0.15s ease;
+}
+
+.btn-primary {
+    background: linear-gradient(to right, var(--accent), var(--accent-strong));
+    color: #0b1120;
+    box-shadow: 0 14px 30px rgba(56, 189, 248, 0.45);
+}
+
+.btn-secondary {
+    background: rgba(15, 23, 42, 0.9);
+    color: var(--text);
+    border-color: rgba(148, 163, 184, 0.4);
+}
+
+.btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 18px 40px rgba(15, 23, 42, 0.9);
+}
+
+.btn:active {
+    transform: translateY(0);
+    box-shadow: none;
+}
+
+/* Formulare */
+form {
+    margin-top: 1.2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+}
+
+label {
+    font-size: 0.9rem;
+    color: var(--muted);
+}
+
+input[type="text"],
+input[type="number"],
+select {
+    background: var(--bg-soft);
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    padding: 0.55rem 0.75rem;
+    color: var(--text);
+    font-size: 0.95rem;
+    outline: none;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+}
+
+input[type="text"]:focus,
+input[type="number"]:focus,
+select:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 1px rgba(56, 189, 248, 0.5);
+    background: #020617;
+}
+
+/* Testfragen */
+.question-block {
+    padding: 0.85rem 0;
+    border-bottom: 1px dashed rgba(148, 163, 184, 0.3);
+}
+
+.question-title {
+    font-weight: 500;
+    margin-bottom: 0.3rem;
+}
+
+.scale-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem 0.8rem;
+    font-size: 0.9rem;
+    margin-top: 0.2rem;
+}
+
+.scale-options label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.25rem 0.55rem;
+    border-radius: 999px;
+    border: 1px solid rgba(148, 163, 184, 0.3);
+    background: rgba(15,23,42,0.7);
+    cursor: pointer;
+}
+
+.scale-options input[type="radio"] {
+    accent-color: var(--accent-strong);
+}
+
+/* Ergebnisliste */
+.results-list {
+    list-style: none;
+    padding-left: 0;
+    margin-top: 1rem;
+}
+
+.results-list li {
+    margin-bottom: 0.35rem;
+}

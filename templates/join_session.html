@@ -1,13 +1,19 @@
 {% extends "base.html" %}
 {% block content %}
 <h2>Workshop beitreten</h2>
+<p>Gib deinen Namen und den Workshop-Code ein, den du vom Host erhalten hast.</p>
+
 <form action="{{ url_for('join_post') }}" method="post">
-    <label for="name">Dein Name:</label>
-    <input type="text" id="name" name="name">
-    <br>
-    <label for="code">Workshop-Code:</label>
-    <input type="text" id="code" name="code" value="ABCD">
-    <br>
-    <button type="submit">Beitreten</button>
+    <div class="form-group">
+        <label for="name">Dein Name</label>
+        <input type="text" id="name" name="name" required>
+    </div>
+
+    <div class="form-group">
+        <label for="code">Workshop-Code</label>
+        <input type="text" id="code" name="code" value="ABCD" required>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Beitreten</button>
 </form>
 {% endblock %}
