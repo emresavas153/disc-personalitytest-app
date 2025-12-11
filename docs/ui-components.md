@@ -23,11 +23,12 @@ For a quick reference of the markdown syntax, visit [this page](https://github.c
 
 ## Images
 
-```markdown
-![get_list_todos_sample](assets/images/fswd-intro_02.png)
-```
 
-![get_list_todos_sample](assets/images/fswd-intro_02.png)
+![join_session](assets/images/join_session.png)
+
+![index](assets/images/index.png)
+
+![host_create](assets/images/host_create.png)
 
 ## Callouts
 

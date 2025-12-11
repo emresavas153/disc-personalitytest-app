@@ -1,34 +1,26 @@
----
-title: Home
-nav_order: 0
----
+# DISC-Persönlichkeitstest
 
-{: .attention }
-> Any text enclosed by `[ ]` are placeholders, including the opening and closing brackets.
->
-> You may delete this `attention` box.
-
-# [Project Name]
-
-[Project description]
+Unsere Web-App ist ein interaktives Tool zur Durchführung von DISC-Persönlichkeitstests, das 
+speziell für die Nutzung in Workshops, Trainings und Teamveranstaltungen entwickelt wird. Das 
+DISC-Modell unterscheidet vier Verhaltensstile – Dominant (D), Initiativ (I), Stetig (S) und 
+Gewissenhaft (C) – und hilft dabei, Kommunikations- und Teamdynamiken besser zu verstehen.
 
 ## Team members
 
-### [Jane Dane]
+### Emre Savas
 
 About
-: Some info about Jane
+: 22 Jahre alt, B. Sc. Wirtschaftsinformatik, ...
 
 Matr.-Nr.
-: 1234567
+: 77204700919
 
-### [Joe Doe]
+### Patman Safi
 
 About
-: Some info about Joe
-
+: 22 Jahre alt, B. Sc. Wirtschaftsinformatik, ... 
 Matr.-Nr.
-: 1234567
+: 77211921777
 
 ## Eidesstattliche Erklärung
 
