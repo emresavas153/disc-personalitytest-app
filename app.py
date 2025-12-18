@@ -10,6 +10,13 @@ FAKE_HOST = {
     "name": "Demo Host"
 }
 
+QUESTIONS = [
+    {"id": 1, "text": "Ich treffe Entscheidungen schnell.", "dimension": "D"},
+    {"id": 2, "text": "Ich bin kontaktfreudig.", "dimension": "I"},
+    {"id": 3, "text": "Ich arbeite gern strukturiert.", "dimension": "C"},
+    {"id": 4, "text": "Ich bin geduldig.", "dimension": "S"},
+]
+
 
 @app.route("/")
 def index():
@@ -34,7 +41,7 @@ def workshop_create():
 @app.route("/workshops/<code>/host", methods=["GET"])
 def host_dashboard(code):
     # Host-Ansicht (Übersicht über Teilnehmer & Ergebnisse)
-    return render_template("host_dashboard.html", code=code, questions=questions)
+    return render_template("host_dashboard.html", code=code, questions=QUESTIONS)
 
 
 @app.route("/join", methods=["GET"])
