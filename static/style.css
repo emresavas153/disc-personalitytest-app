@@ -262,3 +262,7 @@ select:focus {
 .results-list li {
     margin-bottom: 0.35rem;
 }
+
+.hero-actions {
+  margin-top: 1.6rem;
+}
