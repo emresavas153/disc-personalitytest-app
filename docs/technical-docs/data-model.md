@@ -5,7 +5,11 @@ nav_order: 2
 ---
 
 # Data model
+<<<<<<< HEAD
 ![ER Diagram](../assets/images/erd-personalitytest.png)
+=======
+![ER Diagram]({{ '/assets/images/erd_personalitytest.png' | relative_url }})
+>>>>>>> f1335900d9642d38eb43b69e0196f0cec9326180
 
 
 
