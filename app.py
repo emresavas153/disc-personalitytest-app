@@ -63,8 +63,7 @@ def join_post():
 def test_get(code):
     # Später: Fragen laden
     # Jetzt: Platzhalter-Testseite
-    return render_template("test.html", code=code)
-
+    return render_template("test.html", code=code, questions=QUESTIONS)
 
 @app.route("/workshops/<code>/submit", methods=["POST"])
 def test_submit(code):

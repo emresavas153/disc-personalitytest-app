@@ -1,24 +1,32 @@
 {% extends "base.html" %}
 {% block content %}
-<h2>DISC-Test – Workshop {{ code }}</h2>
-<p>Bitte beantworte alle Aussagen auf einer Skala von 1 (stimme gar nicht zu) bis 5 (stimme voll zu).</p>
 
-<form action="{{ url_for('test_submit', code=code) }}" method="post">
+<h1>DISC Test</h1>
+<p>Workshop-Code: <strong>{{ code }}</strong></p>
+
+<form method="POST" action="{{ url_for('test_submit', code=code) }}">
   {% for q in questions %}
     <div class="question-block">
       <div class="question-title">
         {{ loop.index }}. {{ q.text }}
+        <span style="color: var(--muted); font-size: 0.9rem;">(Dimension: {{ q.dimension }})</span>
       </div>
+
       <div class="scale-options">
-        {% for value in range(1, 6) %}
+        {% for v in [1,2,3,4,5] %}
           <label>
-            <input type="radio" name="q{{ q.id }}" value="{{ value }}" required>
-            {{ value }}
+            <input type="radio" name="q_{{ q.id }}" value="{{ v }}" required>
+            {{ v }}
           </label>
         {% endfor %}
       </div>
     </div>
   {% endfor %}
-  <button type="submit" class="btn btn-primary">Antworten abschicken</button>
+
+  <div class="btn-row" style="margin-top: 1.4rem;">
+    <button class="btn btn-primary" type="submit">Antworten absenden</button>
+    <a class="btn btn-secondary" href="{{ url_for('join_get') }}">Abbrechen</a>
+  </div>
 </form>
+
 {% endblock %}
