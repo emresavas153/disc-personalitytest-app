@@ -32,10 +32,10 @@ def workshop_new():
 
 @app.route("/workshops", methods=["POST"])
 def workshop_create():
-    # Später: Workshop speichern, Code generieren
-    # Jetzt: tun wir so als wäre der Code "ABCD"
-    code = "ABCD"
+    title = request.form.get("title", "").strip()
+    code = "ABCD"  # später generieren
     return redirect(url_for("host_dashboard", code=code))
+
 
 
 @app.route("/workshops/<code>/host", methods=["GET"])

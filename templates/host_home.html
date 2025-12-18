@@ -4,16 +4,26 @@
 <h1>Host Dashboard</h1>
 <p>Eingeloggt als: <strong>{{ session.get("host_name") }}</strong></p>
 
-<h2>Meine Workshops</h2>
-<ul>
-  {% for w in workshops %}
-    <li>
-      <strong>{{ w.title }}</strong> – Code: <code>{{ w.code }}</code> – Status: {{ w.status }}
-      – <a href="{{ url_for('host_dashboard', code=w.code) }}">Öffnen</a>
-    </li>
-  {% endfor %}
-</ul>
+<div class="btn-row" style="margin-top: 1rem;">
+  <a class="btn btn-primary" href="{{ url_for('workshop_new') }}">+ Neuen Workshop erstellen</a>
+  <a class="btn btn-secondary" href="{{ url_for('logout') }}">Logout</a>
+</div>
 
-<p><a href="{{ url_for('logout') }}">Logout</a></p>
+<h2 style="margin-top: 1.6rem;">Meine Workshops</h2>
+
+{% if workshops and workshops|length > 0 %}
+  <ul class="results-list">
+    {% for w in workshops %}
+      <li>
+        <strong>{{ w.title }}</strong>
+        – Code: <code>{{ w.code }}</code>
+        – Status: {{ w.status }}
+        – <a href="{{ url_for('host_dashboard', code=w.code) }}">Öffnen</a>
+      </li>
+    {% endfor %}
+  </ul>
+{% else %}
+  <p>Noch keine Workshops vorhanden. Erstelle zuerst einen Workshop.</p>
+{% endif %}
 
 {% endblock %}
