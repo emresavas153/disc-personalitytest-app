@@ -14,7 +14,7 @@ FAKE_HOST = {
 @app.route("/")
 def index():
     # Startseite: Rolle wählen
-    return render_template("index.html")
+    return redirect(url_for("login_get"))
 
 
 @app.route("/workshops/new", methods=["GET"])
@@ -107,12 +107,10 @@ def dashboard():
     if not require_host_login():
         return redirect(url_for("login_get"))
 
-    # Später: hier Workshops aus DB laden (nur für diesen Host)
     workshops = [
         {"code": "ABCD", "title": "Demo Workshop", "status": "open"},
     ]
-
-    return render_template("host_dashboard.html", workshops=workshops)
+    return render_template("host_home.html", workshops=workshops)
 
 
 

@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h1>Host Dashboard</h1>
+<p>Eingeloggt als: <strong>{{ session.get("host_name") }}</strong></p>
+
+<h2>Meine Workshops</h2>
+<ul>
+  {% for w in workshops %}
+    <li>
+      <strong>{{ w.title }}</strong> – Code: <code>{{ w.code }}</code> – Status: {{ w.status }}
+      – <a href="{{ url_for('host_dashboard', code=w.code) }}">Öffnen</a>
+    </li>
+  {% endfor %}
+</ul>
+
+<p><a href="{{ url_for('logout') }}">Logout</a></p>
+
+{% endblock %}
