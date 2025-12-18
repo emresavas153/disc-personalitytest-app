@@ -1,32 +1,127 @@
 {% extends "base.html" %}
 {% block content %}
 
-<h1>DISC Test</h1>
-<p>Workshop-Code: <strong>{{ code }}</strong></p>
-
-<form method="POST" action="{{ url_for('test_submit', code=code) }}">
-  {% for q in questions %}
-    <div class="question-block">
-      <div class="question-title">
-        {{ loop.index }}. {{ q.text }}
-        <span style="color: var(--muted); font-size: 0.9rem;">(Dimension: {{ q.dimension }})</span>
+<div class="quiz">
+  <div class="quiz-header">
+    <div>
+      <h1 class="quiz-title">DISC Test</h1>
+      <p class="quiz-subtitle">Workshop-Code: <strong>{{ code }}</strong></p>
+    </div>
+    <div class="quiz-progress-wrap">
+      <div class="quiz-progress-meta">
+        <span id="progressText">Frage 1 / {{ questions|length }}</span>
       </div>
-
-      <div class="scale-options">
-        {% for v in [1,2,3,4,5] %}
-          <label>
-            <input type="radio" name="q_{{ q.id }}" value="{{ v }}" required>
-            {{ v }}
-          </label>
-        {% endfor %}
+      <div class="progress">
+        <div class="progress-bar" id="progressBar" style="width: 0%;"></div>
       </div>
     </div>
-  {% endfor %}
-
-  <div class="btn-row" style="margin-top: 1.4rem;">
-    <button class="btn btn-primary" type="submit">Antworten absenden</button>
-    <a class="btn btn-secondary" href="{{ url_for('join_get') }}">Abbrechen</a>
   </div>
-</form>
+
+  <form method="POST" action="{{ url_for('test_submit', code=code) }}" id="quizForm">
+    {% for q in questions %}
+      <section class="quiz-step" data-step="{{ loop.index0 }}">
+        <div class="quiz-question">
+          {{ loop.index }}. {{ q.text }}
+        </div>
+
+        <div class="quiz-scale" role="group" aria-label="Antwort auswählen">
+          {% for v in [1,2,3,4,5] %}
+            <label class="scale-pill">
+              <input type="radio" name="q_{{ q.id }}" value="{{ v }}">
+              <span>{{ v }}</span>
+            </label>
+          {% endfor %}
+        </div>
+      </section>
+    {% endfor %}
+
+    <div class="quiz-actions">
+      <button type="button" class="btn btn-secondary" id="prevBtn">Zurück</button>
+      <button type="button" class="btn btn-primary" id="nextBtn">Weiter</button>
+      <button type="submit" class="btn btn-primary" id="submitBtn" style="display:none;">Absenden</button>
+    </div>
+  </form>
+</div>
+
+<script>
+  (function () {
+    const steps = Array.from(document.querySelectorAll(".quiz-step"));
+    const total = steps.length;
+
+    const prevBtn = document.getElementById("prevBtn");
+    const nextBtn = document.getElementById("nextBtn");
+    const submitBtn = document.getElementById("submitBtn");
+
+    const progressBar = document.getElementById("progressBar");
+    const progressText = document.getElementById("progressText");
+
+    let current = 0;
+
+    function isAnswered(stepIndex) {
+      const radios = steps[stepIndex].querySelectorAll('input[type="radio"]');
+      return Array.from(radios).some(r => r.checked);
+    }
+
+    function updateProgress() {
+      // Fortschritt = aktuelle Frage / total (oder: answered count - hier: current)
+      const pct = Math.round(((current + 1) / total) * 100);
+      progressBar.style.width = pct + "%";
+      progressText.textContent = `Frage ${current + 1} / ${total}`;
+    }
+
+    function showStep(i) {
+      steps.forEach((s, idx) => s.style.display = (idx === i ? "block" : "none"));
+
+      prevBtn.disabled = (i === 0);
+
+      // Button-Logik: bei letzter Frage -> Absenden zeigen
+      if (i === total - 1) {
+        nextBtn.style.display = "none";
+        submitBtn.style.display = "inline-flex";
+      } else {
+        nextBtn.style.display = "inline-flex";
+        submitBtn.style.display = "none";
+      }
+
+      updateProgress();
+    }
+
+    function goNext() {
+      // nur weiter wenn beantwortet
+      if (!isAnswered(current)) {
+        nextBtn.classList.add("shake");
+        setTimeout(() => nextBtn.classList.remove("shake"), 300);
+        return;
+      }
+      if (current < total - 1) {
+        current += 1;
+        showStep(current);
+      }
+    }
+
+    function goPrev() {
+      if (current > 0) {
+        current -= 1;
+        showStep(current);
+      }
+    }
+
+    prevBtn.addEventListener("click", goPrev);
+    nextBtn.addEventListener("click", goNext);
+
+    // Optional: wenn User Antwort klickt, automatisch "Weiter" aktiv wirken lassen
+    steps.forEach((step, idx) => {
+      step.addEventListener("change", (e) => {
+        if (idx === current && e.target.matches('input[type="radio"]')) {
+          // kleines UX: wenn nicht letzte Frage, kann man auch automatisch weiter:
+          // goNext();
+        }
+      });
+    });
+
+    // Start
+    showStep(current);
+  })();
+</script>
 
 {% endblock %}
