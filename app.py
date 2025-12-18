@@ -1,6 +1,14 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, session
 
 app = Flask(__name__)
+
+app.secret_key = "dev-secret-change-later"
+
+FAKE_HOST = {
+    "email": "host@example.com",
+    "password": "pass123",
+    "name": "Demo Host"
+}
 
 
 @app.route("/")
@@ -68,6 +76,44 @@ def results(code):
         "c": 3,
     }
     return render_template("results.html", results=dummy_results, code=code)
+
+
+@app.route("/login", methods=["GET"])
+def login_get():
+    return render_template("login.html")
+
+@app.route("/login", methods=["POST"])
+def login_post():
+    email = request.form.get("email", "").strip().lower()
+    password = request.form.get("password", "")
+
+    if email == FAKE_HOST["email"] and password == FAKE_HOST["password"]:
+        session["host_email"] = FAKE_HOST["email"]
+        session["host_name"] = FAKE_HOST["name"]
+        return redirect(url_for("dashboard"))
+
+    return render_template("login.html", error="Login fehlgeschlagen (falsche Daten).")
+
+@app.route("/logout")
+def logout():
+    session.clear()
+    return redirect(url_for("login_get"))
+
+def require_host_login():
+    return "host_email" in session
+
+@app.route("/dashboard")
+def dashboard():
+    if not require_host_login():
+        return redirect(url_for("login_get"))
+
+    # Später: hier Workshops aus DB laden (nur für diesen Host)
+    workshops = [
+        {"code": "ABCD", "title": "Demo Workshop", "status": "open"},
+    ]
+
+    return render_template("host_dashboard.html", workshops=workshops)
+
 
 
 if __name__ == "__main__":

@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h1>Host Login</h1>
+
+{% if error %}
+  <p style="color: red;">{{ error }}</p>
+{% endif %}
+
+<form method="POST" action="{{ url_for('login_post') }}">
+  <label for="email">E-Mail</label><br>
+  <input id="email" name="email" type="email" required><br><br>
+
+  <label for="password">Passwort</label><br>
+  <input id="password" name="password" type="password" required><br><br>
+
+  <button type="submit">Login</button>
+</form>
+
+{% endblock %}
