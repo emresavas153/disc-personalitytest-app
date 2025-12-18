@@ -5,72 +5,87 @@ nav_order: 2
 ---
 
 # Data model
-<<<<<<< HEAD
-![ER Diagram](../assets/images/erd-personalitytest.png)
+
+![ER Diagram](../assets/images/erd.png)
 =======
-![ER Diagram]({{ '/assets/images/erd_personalitytest.png' | relative_url }})
->>>>>>> f1335900d9642d38eb43b69e0196f0cec9326180
 
 
 
-Das Datenmodell der DISC-Workshop-App besteht aus vier zentralen Entitäten: **Workshop**, **Participant**, **Question** und **Answer**.  
-Diese Struktur ermöglicht es, Teilnehmer in Workshops zu organisieren, DISC-Fragen zu stellen und alle Antworten eindeutig zu speichern und auszuwerten.
+Die App besteht aus fünf zentralen Entitäten:
 
+- **Host** (mit Login) erstellt und verwaltet Workshops
+- **Workshop** ist eine konkrete Workshop-Instanz mit Join-Code und Status
+- **Participant** tritt einem Workshop per Code bei und bekommt ein Token zur Wiedererkennung
+- **Question** enthält die DISC-Fragen (inkl. Dimension D/I/S/C)
+- **Answer** speichert die Antworten eines Teilnehmers zu einer Frage
 
+## Host
+
+Ein **Host** ist ein angemeldeter Benutzer der Anwendung. Er kann mehrere Workshops anlegen, verwalten und deren Team-Ergebnisse ansehen.
+
+**Attribute:**
+- `id` – eindeutige Host-ID
+- `name` – Anzeigename des Hosts
+- `email` (unique) – Login-Adresse
+- `password_hash` – gehashtes Passwort (kein Klartext)
+- `created_at` – Zeitpunkt der Registrierung
+
+**Beziehungen:**
+- Ein Host **hat viele** Workshops (1:n)
 
 ## Workshop
 
-**Attribute:**
+Ein **Workshop** ist eine Session, die vom Host erstellt wird. Teilnehmende treten über einen öffentlichen Code bei. Der Status ermöglicht später z. B. das Starten/Beenden eines Workshops.
 
-- `id` – eindeutige Workshop-ID  
-- `code` – öffentlicher Beitrittscode  
-- `title` – Name des Workshops  
-- `created_at` – Zeitpunkt der Erstellung  
+**Attribute:**
+- `id` – eindeutige Workshop-ID
+- `code` (unique) – öffentlicher Beitrittscode
+- `title` – Titel des Workshops
+- `status` – Zustand (z. B. *created / running / finished*)
+- `created_at` – Zeitpunkt der Erstellung
 
 **Beziehungen:**
-
-- Ein Workshop hat mehrere Participants
-
+- Ein Workshop **gehört zu einem** Host (n:1)
+- Ein Workshop **hat viele** Participants (1:n)
 
 ## Participant
 
-**Attribute:**
+Ein **Participant** ist eine Person, die einem Workshop beitritt, ohne einen eigenen Account zu benötigen. Das `participant_token` dient zur eindeutigen Wiedererkennung (z. B. um eine Sitzung fortzusetzen), ohne dass ein Login nötig ist.
 
-- `id` – eindeutige Teilnehmer-ID  
-- `name` – Name der Person  
-- `joined_at` – Zeitpunkt des Beitritts  
+**Attribute:**
+- `id` – eindeutige Teilnehmer-ID
+- `name` – Name der Person
+- `participant_token` (unique) – Token zur Wiedererkennung
+- `joined_at` – Zeitpunkt des Beitritts
 
 **Beziehungen:**
-
-- Ein Participant gehört zu einem Workshop
-- Ein Participant hat mehrere Answers
-
-
+- Ein Participant **gehört zu einem** Workshop (n:1)
+- Ein Participant **hat viele** Answers (1:n)
 
 ## Question
 
-**Attribute:**
+Eine **Question** ist eine DISC-Frage. Die `dimension` ordnet jede Frage einer DISC-Kategorie zu (D, I, S oder C). Fragen sind im aktuellen Modell **global** und können in jedem Workshop verwendet werden.
 
-- `id` – eindeutige Frage-ID  
-- `text` – Inhalt der Frage  
-- `dimension` – DISC-Kategorie (D, I, S oder C)
+**Attribute:**
+- `id` – eindeutige Frage-ID
+- `text` – Fragetext
+- `dimension` – DISC-Dimension (*D, I, S, C*)
 
 **Beziehungen:**
-
-- Eine Question hat mehrere Answers
-
+- Eine Question **hat viele** Answers (1:n)
 
 ## Answer
 
-**Attribute:**
+Ein **Answer** speichert die konkrete Antwort eines Teilnehmers zu einer bestimmten Frage. Die Antworten sind notwendig, um später Team-Ergebnisse zu aggregieren (z. B. Summen/Durchschnitte pro Dimension), ohne dass Teilnehmende ihre individuellen Ergebnisse sehen müssen.
 
-- `id` – eindeutige Antwort-ID  
+**Attribute:**
+- `id` – eindeutige Antwort-ID
 - `value` – numerischer Antwortwert (z. B. Skala 1–5)
 
 **Beziehungen:**
+- Ein Answer **gehört zu einem** Participant (n:1)
+- Ein Answer **gehört zu einer** Question (n:1)
 
-- Ein Answer gehört zu einem Participant
-- Ein Answer gehört zu einer Question
+## Hinweis zur Auswertung (Team Aggregat)
 
-
-
+Die Datenbank speichert Antworten **pro Participant**, damit Auswertungen korrekt berechnet werden können. In der Anwendung werden jedoch später ausschließlich **aggregierte Team-Ergebnisse** dargestellt (z. B. pro Workshop und DISC-Dimension), nicht die individuellen Resultate einzelner Teilnehmer.
