@@ -21,7 +21,7 @@ QUESTIONS = [
 @app.route("/")
 def index():
     # Startseite: Rolle wählen
-    return redirect(url_for("login_get"))
+    return render_template("index.html")
 
 
 @app.route("/workshops/new", methods=["GET"])
