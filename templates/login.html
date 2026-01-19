@@ -17,4 +17,10 @@
   <button type="submit">Login</button>
 </form>
 
+<p style="margin-top: 1.2rem; color: var(--muted);">
+    Noch kein Account?
+    <a href="{{ url_for('register_get') }}" class="btn btn-secondary" style="margin-left: 0.5rem;">
+        Jetzt registrieren
+    </a>
+</p>
 {% endblock %}
