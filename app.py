@@ -1,20 +1,25 @@
 import os
 import secrets
+
 from flask import Flask, render_template, request, redirect, url_for, session
 from werkzeug.security import generate_password_hash, check_password_hash
 
-from db import init_db, db
+from db import db, init_db
 from models import Host, Workshop, Participant, Question, Answer
+
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "dev-secret-change-later"
 
-# SQLite lokal im instance-Ordner (prof-style)
 os.makedirs(app.instance_path, exist_ok=True)
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///" + os.path.join(app.instance_path, "app.sqlite")
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 init_db(app)
+
+with app.app_context():
+    db.create_all()
+
 
 def seed_questions():
     if Question.query.first():
@@ -102,36 +107,119 @@ def join_get():
 
 @app.route("/join", methods=["POST"])
 def join_post():
-    name = request.form.get("name")
-    code = request.form.get("code")
-    # Später: Teilnehmer speichern
-    # Jetzt: direkt zum Test weiterleiten
+    name = (request.form.get("name") or "").strip()
+    code = (request.form.get("code") or "").strip().upper()
+
+    if not name or not code:
+        return render_template("join_session.html", error="Bitte Name und Code eingeben.")
+
+    workshop = Workshop.query.filter_by(code=code).first()
+    if not workshop:
+        return render_template("join_session.html", error="Workshop-Code nicht gefunden.")
+
+    token = secrets.token_hex(16)
+
+    participant = Participant(
+        name=name,
+        participant_token=token,
+        workshop_id=workshop.id
+    )
+    db.session.add(participant)
+    db.session.commit()
+
+    # merken wer du bist (für eigenes Ergebnis + Antworten speichern)
+    session["participant_id"] = participant.id
+    session["participant_token"] = token
+    session["workshop_code"] = code
+
     return redirect(url_for("test_get", code=code))
+
 
 
 @app.route("/workshops/<code>/test", methods=["GET"])
 def test_get(code):
-    # Später: Fragen laden
-    # Jetzt: Platzhalter-Testseite
-    return render_template("test.html", code=code, questions=QUESTIONS)
+    workshop = Workshop.query.filter_by(code=code).first_or_404()
+
+    # Optional: sicherstellen, dass Participant in diesem Workshop ist
+    if session.get("workshop_code") != code or not session.get("participant_id"):
+        return redirect(url_for("join_get"))
+
+    questions = Question.query.order_by(Question.id.asc()).all()
+    return render_template("test.html", code=code, questions=questions, fullscreen=True)
+
 
 @app.route("/workshops/<code>/submit", methods=["POST"])
 def test_submit(code):
-    # Später: Antworten auswerten
-    # Jetzt: einfach Dummy-Ergebnis anzeigen
+    workshop = Workshop.query.filter_by(code=code).first_or_404()
+
+    participant_id = session.get("participant_id")
+    if not participant_id or session.get("workshop_code") != code:
+        return redirect(url_for("join_get"))
+
+    questions = Question.query.order_by(Question.id.asc()).all()
+
+    # optional: alte Antworten dieses Teilnehmers in diesem Workshop löschen (falls re-test)
+    Answer.query.filter_by(workshop_id=workshop.id, participant_id=participant_id).delete()
+
+    for q in questions:
+        raw = request.form.get(f"q_{q.id}")
+        if raw is None:
+            # falls jemand irgendwie submit macht ohne alles zu beantworten:
+            return redirect(url_for("test_get", code=code))
+        value = int(raw)
+
+        db.session.add(Answer(
+            value=value,
+            participant_id=participant_id,
+            question_id=q.id,
+            workshop_id=workshop.id
+        ))
+
+    db.session.commit()
     return redirect(url_for("results", code=code))
+
+
 
 
 @app.route("/workshops/<code>/results", methods=["GET"])
 def results(code):
-    dummy_results = {
-        "team_name": f"Workshop {code}",
-        "d": 10,
-        "i": 7,
-        "s": 5,
-        "c": 3,
-    }
-    return render_template("results.html", results=dummy_results, code=code)
+    workshop = Workshop.query.filter_by(code=code).first_or_404()
+
+    participant_id = session.get("participant_id")
+    if not participant_id or session.get("workshop_code") != code:
+        return redirect(url_for("join_get"))
+
+    # alle Answers im Workshop + Questions joinen um Dimension zu kennen
+    all_answers = (
+        db.session.query(Answer, Question)
+        .join(Question, Answer.question_id == Question.id)
+        .filter(Answer.workshop_id == workshop.id)
+        .all()
+    )
+
+    # Team aggregat
+    team = {"D": 0, "I": 0, "S": 0, "C": 0}
+    for a, q in all_answers:
+        team[q.dimension] += a.value
+
+    # mein Ergebnis
+    my_answers = (
+        db.session.query(Answer, Question)
+        .join(Question, Answer.question_id == Question.id)
+        .filter(Answer.workshop_id == workshop.id, Answer.participant_id == participant_id)
+        .all()
+    )
+    my = {"D": 0, "I": 0, "S": 0, "C": 0}
+    for a, q in my_answers:
+        my[q.dimension] += a.value
+
+    return render_template(
+        "results.html",
+        code=code,
+        team_name=workshop.title,
+        team_results=team,
+        my_results=my
+    )
 
 
 @app.route("/login", methods=["GET"])

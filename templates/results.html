@@ -1,13 +1,29 @@
 {% extends "base.html" %}
 {% block content %}
-<h2>Team-Ergebnis für {{ results.team_name }}</h2>
-<p>Platzhalter-Ergebnisse:</p>
-<ul>
-    <li>D: {{ results.d }}</li>
-    <li>I: {{ results.i }}</li>
-    <li>S: {{ results.s }}</li>
-    <li>C: {{ results.c }}</li>
+
+<h1>Ergebnisse</h1>
+<p>Workshop: <strong>{{ team_name }}</strong> – Code: <code>{{ code }}</code></p>
+
+<h2>Mein Ergebnis</h2>
+<p>Deine persönliche Auswertung (nur für dich sichtbar).</p>
+<ul class="results-list">
+  <li><strong>D</strong>: {{ my_results["D"] }}</li>
+  <li><strong>I</strong>: {{ my_results["I"] }}</li>
+  <li><strong>S</strong>: {{ my_results["S"] }}</li>
+  <li><strong>C</strong>: {{ my_results["C"] }}</li>
 </ul>
 
-<p>Später kommt hier eine richtige Auswertung mit Diagramm & Text.</p>
+<h2>Team-Ergebnis</h2>
+<p>Aggregierte Auswertung (Summe aller Antworten im Workshop).</p>
+<ul class="results-list">
+  <li><strong>D</strong>: {{ team_results["D"] }}</li>
+  <li><strong>I</strong>: {{ team_results["I"] }}</li>
+  <li><strong>S</strong>: {{ team_results["S"] }}</li>
+  <li><strong>C</strong>: {{ team_results["C"] }}</li>
+</ul>
+
+<div class="btn-row" style="margin-top: 1.5rem;">
+  <a class="btn btn-secondary" href="{{ url_for('index') }}">Zur Startseite</a>
+</div>
+
 {% endblock %}

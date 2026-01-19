@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
+
 <header class="topbar">
     <div class="topbar-inner">
         <div class="brand">
@@ -19,10 +20,11 @@
     </div>
 </header>
 
-<main class="page">
-    <div class="card">
+<main class="page {% if fullscreen %}page-fullscreen{% endif %}">
+    <div class="{% if not fullscreen %}card{% endif %}">
         {% block content %}{% endblock %}
     </div>
 </main>
+
 </body>
 </html>
