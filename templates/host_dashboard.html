@@ -23,11 +23,14 @@
 
 <h2>Team Ergebnis (gesamt)</h2>
 <ul class="results-list">
-  <li>D: {{ team["D"] }}</li>
-  <li>I: {{ team["I"] }}</li>
-  <li>S: {{ team["S"] }}</li>
-  <li>C: {{ team["C"] }}</li>
+  <li><strong>D</strong>: {{ team_results["D"] }}</li>
+  <li><strong>I</strong>: {{ team_results["I"] }}</li>
+  <li><strong>S</strong>: {{ team_results["S"] }}</li>
+  <li><strong>C</strong>: {{ team_results["C"] }}</li>
 </ul>
+{% if team_ties %}
+  <p><strong>Gleichstand bei {{ team_ties }} Teilnehmenden.</strong></p>
+{% endif %}
 
 <hr style="margin: 1.5rem 0; border: 0; border-top: 1px solid rgba(148,163,184,0.2);">
 

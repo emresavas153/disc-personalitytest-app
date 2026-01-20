@@ -72,22 +72,36 @@ def host_dashboard(code):
     participants = Participant.query.filter_by(workshop_id=workshop.id).order_by(Participant.joined_at.asc()).all()
 
     # Team Aggregat
-    team = {"D": 0, "I": 0, "S": 0, "C": 0}
-    rows = (
-        db.session.query(Question.dimension, func.sum(Answer.value))
-        .join(Answer, Answer.question_id == Question.id)
+    # Team Aggregat (dominante Typen je Teilnehmer zählen)
+    team_counts = {"D": 0, "I": 0, "S": 0, "C": 0}
+    team_ties = 0
+    all_answers = (
+        db.session.query(Answer, Question)
+        .join(Question, Answer.question_id == Question.id)
         .filter(Answer.workshop_id == workshop.id)
-        .group_by(Question.dimension)
         .all()
     )
-    for dim, total in rows:
-        team[dim] = int(total or 0)
+    participant_scores = {}
+    for a, q in all_answers:
+        participant_scores.setdefault(
+            a.participant_id,
+            {"D": 0, "I": 0, "S": 0, "C": 0}
+        )
+        participant_scores[a.participant_id][q.dimension] += a.value
+
+    for scores in participant_scores.values():
+        dominant = dominant_types(scores)
+        if len(dominant) == 1:
+            team_counts[dominant[0]] += 1
+        elif len(dominant) > 1:
+            team_ties += 1
 
     return render_template(
         "host_dashboard.html",
         workshop=workshop,
         participants=participants,
-        team=team
+        team_results=team_counts,
+        team_ties=team_ties,
     )
 
 @app.route("/workshops/<code>/toggle", methods=["POST"])
@@ -111,6 +125,12 @@ def join_get():
 
 from sqlalchemy import func
 import secrets
+
+def dominant_types(scores):
+    if not scores:
+        return []
+    max_value = max(scores.values())
+    return [key for key, value in scores.items() if value == max_value]
 
 @app.route("/join", methods=["POST"])
 def join_post():
@@ -222,11 +242,6 @@ def results(code):
     )
 
 
-    def dominant_types(scores):
-        if not scores:
-            return []
-        max_value = max(scores.values())
-        return [key for key, value in scores.items() if value == max_value]
 
     # Team aggregat: pro Teilnehmer dominante Typen zählen
     team_counts = {"D": 0, "I": 0, "S": 0, "C": 0}
