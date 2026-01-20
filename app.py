@@ -22,26 +22,6 @@ with app.app_context():
     db.create_all()
 
 
-def seed_questions():
-    if Question.query.first():
-        return
-    demo = [
-        ("Ich treffe Entscheidungen schnell.", "D"),
-        ("Ich bin kontaktfreudig.", "I"),
-        ("Ich bin geduldig.", "S"),
-        ("Ich arbeite gern strukturiert.", "C"),
-    ]
-    for text, dim in demo:
-        db.session.add(Question(text=text, dimension=dim))
-    db.session.commit()
-
-with app.app_context():
-    db.create_all()
-    seed_questions()
-app.secret_key = "dev-secret-change-later"
-
-
-
 
 @app.route("/")
 def index():
