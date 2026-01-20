@@ -3,6 +3,7 @@ import secrets
 
 from flask import Flask, render_template, request, redirect, url_for, session
 from werkzeug.security import generate_password_hash, check_password_hash
+from sqlalchemy import func
 
 from db import db, init_db
 from models import Host, Workshop, Participant, Question, Answer
@@ -39,19 +40,7 @@ with app.app_context():
     seed_questions()
 app.secret_key = "dev-secret-change-later"
 
-#Testdaten
-FAKE_HOST = {
-    "email": "host@example.com",
-    "password": "pass123",
-    "name": "Demo Host"
-}
 
-QUESTIONS = [
-    {"id": 1, "text": "Ich treffe Entscheidungen schnell.", "dimension": "D"},
-    {"id": 2, "text": "Ich bin kontaktfreudig.", "dimension": "I"},
-    {"id": 3, "text": "Ich arbeite gern strukturiert.", "dimension": "C"},
-    {"id": 4, "text": "Ich bin geduldig.", "dimension": "S"},
-]
 
 
 @app.route("/")
@@ -95,8 +84,43 @@ def workshop_create():
 
 @app.route("/workshops/<code>/host", methods=["GET"])
 def host_dashboard(code):
-    # Host-Ansicht (Übersicht über Teilnehmer & Ergebnisse)
-    return render_template("host_dashboard.html", code=code, questions=QUESTIONS)
+    if not require_host_login():
+        return redirect(url_for("login_get"))
+
+    workshop = Workshop.query.filter_by(code=code, host_id=session["host_id"]).first_or_404()
+
+    participants = Participant.query.filter_by(workshop_id=workshop.id).order_by(Participant.joined_at.asc()).all()
+
+    # Team Aggregat
+    team = {"D": 0, "I": 0, "S": 0, "C": 0}
+    rows = (
+        db.session.query(Question.dimension, func.sum(Answer.value))
+        .join(Answer, Answer.question_id == Question.id)
+        .filter(Answer.workshop_id == workshop.id)
+        .group_by(Question.dimension)
+        .all()
+    )
+    for dim, total in rows:
+        team[dim] = int(total or 0)
+
+    return render_template(
+        "host_dashboard.html",
+        workshop=workshop,
+        participants=participants,
+        team=team
+    )
+
+@app.route("/workshops/<code>/toggle", methods=["POST"])
+def workshop_toggle(code):
+    if not require_host_login():
+        return redirect(url_for("login_get"))
+
+    workshop = Workshop.query.filter_by(code=code, host_id=session["host_id"]).first_or_404()
+
+    workshop.status = "closed" if workshop.status == "open" else "open"
+    db.session.commit()
+
+    return redirect(url_for("host_dashboard", code=code))
 
 
 @app.route("/join", methods=["GET"])
@@ -105,10 +129,13 @@ def join_get():
     return render_template("join_session.html")
 
 
+from sqlalchemy import func
+import secrets
+
 @app.route("/join", methods=["POST"])
 def join_post():
-    name = (request.form.get("name") or "").strip()
-    code = (request.form.get("code") or "").strip().upper()
+    name = request.form.get("name", "").strip()
+    code = request.form.get("code", "").strip().upper()
 
     if not name or not code:
         return render_template("join_session.html", error="Bitte Name und Code eingeben.")
@@ -116,23 +143,29 @@ def join_post():
     workshop = Workshop.query.filter_by(code=code).first()
     if not workshop:
         return render_template("join_session.html", error="Workshop-Code nicht gefunden.")
+    if workshop.status != "open":
+        return render_template("join_session.html", error="Dieser Workshop ist geschlossen.")
 
-    token = secrets.token_hex(16)
+    # Participant anlegen (Token = öffentlich/teilbar, ID = intern)
+    participant_token = secrets.token_urlsafe(24)
 
-    participant = Participant(
+    p = Participant(
         name=name,
-        participant_token=token,
-        workshop_id=workshop.id
+        participant_token=participant_token,
+        workshop_id=workshop.id,
     )
-    db.session.add(participant)
+    db.session.add(p)
     db.session.commit()
 
-    # merken wer du bist (für eigenes Ergebnis + Antworten speichern)
-    session["participant_id"] = participant.id
-    session["participant_token"] = token
-    session["workshop_code"] = code
+    # Teilnehmer “einloggen”
+    session["participant_id"] = p.id
+    session["participant_token"] = p.participant_token
+    session["workshop_id"] = workshop.id
+    session["workshop_code"] = workshop.code
 
-    return redirect(url_for("test_get", code=code))
+    return redirect(url_for("test_get", code=workshop.code))
+
+
 
 
 
@@ -140,43 +173,54 @@ def join_post():
 def test_get(code):
     workshop = Workshop.query.filter_by(code=code).first_or_404()
 
-    # Optional: sicherstellen, dass Participant in diesem Workshop ist
-    if session.get("workshop_code") != code or not session.get("participant_id"):
+    
+    # Teilnehmer muss aus genau diesem Workshop kommen
+    if session.get("workshop_id") != workshop.id or "participant_id" not in session:
         return redirect(url_for("join_get"))
 
     questions = Question.query.order_by(Question.id.asc()).all()
+
+    # Fullscreen für dein Quiz
     return render_template("test.html", code=code, questions=questions, fullscreen=True)
+
+
+
 
 
 @app.route("/workshops/<code>/submit", methods=["POST"])
 def test_submit(code):
     workshop = Workshop.query.filter_by(code=code).first_or_404()
 
-    participant_id = session.get("participant_id")
-    if not participant_id or session.get("workshop_code") != code:
+    
+    if session.get("workshop_id") != workshop.id or "participant_id" not in session:
         return redirect(url_for("join_get"))
+
+    participant_id = session["participant_id"]
+
+    # falls User erneut abgibt: alte Antworten löschen
+    Answer.query.filter_by(workshop_id=workshop.id, participant_id=participant_id).delete()
+    db.session.commit()
 
     questions = Question.query.order_by(Question.id.asc()).all()
 
-    # optional: alte Antworten dieses Teilnehmers in diesem Workshop löschen (falls re-test)
-    Answer.query.filter_by(workshop_id=workshop.id, participant_id=participant_id).delete()
-
     for q in questions:
-        raw = request.form.get(f"q_{q.id}")
-        if raw is None:
-            # falls jemand irgendwie submit macht ohne alles zu beantworten:
+        val = request.form.get(f"q_{q.id}")
+        if val is None:
+            # wenn JS sauber ist, passiert das nicht, aber als Absicherung:
             return redirect(url_for("test_get", code=code))
-        value = int(raw)
 
-        db.session.add(Answer(
-            value=value,
+        a = Answer(
+            value=int(val),
             participant_id=participant_id,
             question_id=q.id,
-            workshop_id=workshop.id
-        ))
+            workshop_id=workshop.id,
+        )
+        db.session.add(a)
 
     db.session.commit()
     return redirect(url_for("results", code=code))
+
+
 
 
 
@@ -185,41 +229,46 @@ def test_submit(code):
 def results(code):
     workshop = Workshop.query.filter_by(code=code).first_or_404()
 
-    participant_id = session.get("participant_id")
-    if not participant_id or session.get("workshop_code") != code:
+    if session.get("workshop_id") != workshop.id or "participant_id" not in session:
         return redirect(url_for("join_get"))
 
-    # alle Answers im Workshop + Questions joinen um Dimension zu kennen
-    all_answers = (
-        db.session.query(Answer, Question)
-        .join(Question, Answer.question_id == Question.id)
-        .filter(Answer.workshop_id == workshop.id)
-        .all()
-    )
+    participant_id = session["participant_id"]
 
-    # Team aggregat
-    team = {"D": 0, "I": 0, "S": 0, "C": 0}
-    for a, q in all_answers:
-        team[q.dimension] += a.value
-
-    # mein Ergebnis
-    my_answers = (
-        db.session.query(Answer, Question)
-        .join(Question, Answer.question_id == Question.id)
-        .filter(Answer.workshop_id == workshop.id, Answer.participant_id == participant_id)
-        .all()
-    )
+    # Mein Ergebnis
     my = {"D": 0, "I": 0, "S": 0, "C": 0}
-    for a, q in my_answers:
-        my[q.dimension] += a.value
+    my_rows = (
+        db.session.query(Question.dimension, func.sum(Answer.value))
+        .join(Answer, Answer.question_id == Question.id)
+        .filter(Answer.workshop_id == workshop.id, Answer.participant_id == participant_id)
+        .group_by(Question.dimension)
+        .all()
+    )
+    for dim, total in my_rows:
+        my[dim] = int(total or 0)
+
+    # Team Ergebnis (inkl. mir)
+    team = {"D": 0, "I": 0, "S": 0, "C": 0}
+    team_rows = (
+        db.session.query(Question.dimension, func.sum(Answer.value))
+        .join(Answer, Answer.question_id == Question.id)
+        .filter(Answer.workshop_id == workshop.id)
+        .group_by(Question.dimension)
+        .all()
+    )
+    for dim, total in team_rows:
+        team[dim] = int(total or 0)
+
+    participant = Participant.query.get(participant_id)
 
     return render_template(
         "results.html",
-        code=code,
-        team_name=workshop.title,
-        team_results=team,
-        my_results=my
+        workshop=workshop,
+        participant=participant,
+        my=my,
+        team=team,
+        fullscreen=False
     )
+
 
 
 @app.route("/login", methods=["GET"])

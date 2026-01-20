@@ -2,28 +2,34 @@
 {% block content %}
 
 <h1>Ergebnisse</h1>
-<p>Workshop: <strong>{{ team_name }}</strong> – Code: <code>{{ code }}</code></p>
+<p>
+  Workshop: <strong>{{ workshop.title }}</strong> – Code: <code>{{ workshop.code }}</code><br>
+  Teilnehmer: <strong>{{ participant.name }}</strong>
+</p>
+
+<hr style="margin: 1.5rem 0; border: 0; border-top: 1px solid rgba(148,163,184,0.2);">
 
 <h2>Mein Ergebnis</h2>
-<p>Deine persönliche Auswertung (nur für dich sichtbar).</p>
 <ul class="results-list">
-  <li><strong>D</strong>: {{ my_results["D"] }}</li>
-  <li><strong>I</strong>: {{ my_results["I"] }}</li>
-  <li><strong>S</strong>: {{ my_results["S"] }}</li>
-  <li><strong>C</strong>: {{ my_results["C"] }}</li>
+  <li>D: {{ my["D"] }}</li>
+  <li>I: {{ my["I"] }}</li>
+  <li>S: {{ my["S"] }}</li>
+  <li>C: {{ my["C"] }}</li>
 </ul>
 
-<h2>Team-Ergebnis</h2>
-<p>Aggregierte Auswertung (Summe aller Antworten im Workshop).</p>
+<hr style="margin: 1.5rem 0; border: 0; border-top: 1px solid rgba(148,163,184,0.2);">
+
+<h2>Team Ergebnis (gesamt)</h2>
 <ul class="results-list">
-  <li><strong>D</strong>: {{ team_results["D"] }}</li>
-  <li><strong>I</strong>: {{ team_results["I"] }}</li>
-  <li><strong>S</strong>: {{ team_results["S"] }}</li>
-  <li><strong>C</strong>: {{ team_results["C"] }}</li>
+  <li>D: {{ team["D"] }}</li>
+  <li>I: {{ team["I"] }}</li>
+  <li>S: {{ team["S"] }}</li>
+  <li>C: {{ team["C"] }}</li>
 </ul>
 
-<div class="btn-row" style="margin-top: 1.5rem;">
-  <a class="btn btn-secondary" href="{{ url_for('index') }}">Zur Startseite</a>
+<div class="btn-row" style="margin-top: 1.4rem;">
+  <a class="btn btn-secondary" href="{{ url_for('test_get', code=workshop.code) }}">Test erneut starten</a>
+  <a class="btn btn-primary" href="{{ url_for('index') }}">Zur Startseite</a>
 </div>
 
 {% endblock %}
