@@ -209,44 +209,62 @@ def test_submit(code):
 def results(code):
     workshop = Workshop.query.filter_by(code=code).first_or_404()
 
-    if session.get("workshop_id") != workshop.id or "participant_id" not in session:
+    participant_id = session.get("participant_id")
+    if not participant_id or session.get("workshop_code") != code:
         return redirect(url_for("join_get"))
 
-    participant_id = session["participant_id"]
-
-    # Mein Ergebnis
-    my = {"D": 0, "I": 0, "S": 0, "C": 0}
-    my_rows = (
-        db.session.query(Question.dimension, func.sum(Answer.value))
-        .join(Answer, Answer.question_id == Question.id)
-        .filter(Answer.workshop_id == workshop.id, Answer.participant_id == participant_id)
-        .group_by(Question.dimension)
-        .all()
-    )
-    for dim, total in my_rows:
-        my[dim] = int(total or 0)
-
-    # Team Ergebnis (inkl. mir)
-    team = {"D": 0, "I": 0, "S": 0, "C": 0}
-    team_rows = (
-        db.session.query(Question.dimension, func.sum(Answer.value))
-        .join(Answer, Answer.question_id == Question.id)
+    # alle Answers im Workshop + Questions joinen um Dimension zu kennen
+    all_answers = (
+        db.session.query(Answer, Question)
+        .join(Question, Answer.question_id == Question.id)
         .filter(Answer.workshop_id == workshop.id)
-        .group_by(Question.dimension)
         .all()
     )
-    for dim, total in team_rows:
-        team[dim] = int(total or 0)
 
-    participant = Participant.query.get(participant_id)
+
+    def dominant_types(scores):
+        if not scores:
+            return []
+        max_value = max(scores.values())
+        return [key for key, value in scores.items() if value == max_value]
+
+    # Team aggregat: pro Teilnehmer dominante Typen zählen
+    team_counts = {"D": 0, "I": 0, "S": 0, "C": 0}
+    team_ties = 0
+    participant_scores = {}
+    for a, q in all_answers:
+        participant_scores.setdefault(
+            a.participant_id,
+            {"D": 0, "I": 0, "S": 0, "C": 0}
+        )
+        participant_scores[a.participant_id][q.dimension] += a.value
+
+    for scores in participant_scores.values():
+        dominant = dominant_types(scores)
+        if len(dominant) == 1:
+            team_counts[dominant[0]] += 1
+        elif len(dominant) > 1:
+            team_ties += 1
+
+    # mein Ergebnis
+    my_answers = (
+        db.session.query(Answer, Question)
+        .join(Question, Answer.question_id == Question.id)
+        .filter(Answer.workshop_id == workshop.id, Answer.participant_id == participant_id)
+        .all()
+    )
+    my_scores = {"D": 0, "I": 0, "S": 0, "C": 0}
+    for a, q in my_answers:
+        my_scores[q.dimension] += a.value
+    my_dominant = dominant_types(my_scores)
 
     return render_template(
         "results.html",
-        workshop=workshop,
-        participant=participant,
-        my=my,
-        team=team,
-        fullscreen=False
+        code=code,
+        team_name=workshop.title,
+        team_results=team_counts,
+        team_ties=team_ties,
+        my_dominant=my_dominant
     )
 
 
