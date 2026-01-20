@@ -22,10 +22,9 @@ with app.app_context():
     db.create_all()
 
 
-
+#Startseite
 @app.route("/")
 def index():
-    # Startseite: Rolle wählen
     return render_template("index.html")
 
 
@@ -44,16 +43,18 @@ def workshop_create():
 
     # kurzer Code, eindeutig halten
     while True:
-        code = secrets.token_hex(2).upper()  # z.B. 'A1B2'
-        if not Workshop.query.filter_by(code=code).first():
+        code = secrets.token_hex(2).upper()  #token bzw. code für den Workshop
+        if not Workshop.query.filter_by(code=code).first(): #Schleife für eindeutigen code
             break
-
+    
+    #Erstellen eines Workshops
     w = Workshop(
         code=code,
         title=title,
         status="open",
         host_id=session["host_id"],
     )
+    #Anbinden an die DB
     db.session.add(w)
     db.session.commit()
 
@@ -67,20 +68,22 @@ def host_dashboard(code):
     if not require_host_login():
         return redirect(url_for("login_get"))
 
-    workshop = Workshop.query.filter_by(code=code, host_id=session["host_id"]).first_or_404()
+    workshop = Workshop.query.filter_by(code=code, host_id=session["host_id"]).first_or_404() #Workshop des eingeloggten Hosts holen
 
-    participants = Participant.query.filter_by(workshop_id=workshop.id).order_by(Participant.joined_at.asc()).all()
+    participants = Participant.query.filter_by(workshop_id=workshop.id).order_by(Participant.joined_at.asc()).all() #Teilnehmer des Workshops holen
 
-    # Team Aggregat
-    # Team Aggregat (dominante Typen je Teilnehmer zählen)
+    
     team_counts = {"D": 0, "I": 0, "S": 0, "C": 0}
     team_ties = 0
+
+    
     all_answers = (
         db.session.query(Answer, Question)
         .join(Question, Answer.question_id == Question.id)
         .filter(Answer.workshop_id == workshop.id)
         .all()
     )
+    #Punktesystem für die Team-Auswertung
     participant_scores = {}
     for a, q in all_answers:
         participant_scores.setdefault(
@@ -104,6 +107,8 @@ def host_dashboard(code):
         team_ties=team_ties,
     )
 
+
+#workshop öffnen/schließen
 @app.route("/workshops/<code>/toggle", methods=["POST"])
 def workshop_toggle(code):
     if not require_host_login():
@@ -146,7 +151,7 @@ def join_post():
     if workshop.status != "open":
         return render_template("join_session.html", error="Dieser Workshop ist geschlossen.")
 
-    # Participant anlegen (Token = öffentlich/teilbar, ID = intern)
+    # Teilnehmer anlegen und Token generieren
     participant_token = secrets.token_urlsafe(24)
 
     p = Participant(
@@ -180,7 +185,7 @@ def test_get(code):
 
     questions = Question.query.order_by(Question.id.asc()).all()
 
-    # Fullscreen für dein Quiz
+    # Fullscreen für Quiz
     return render_template("test.html", code=code, questions=questions, fullscreen=True)
 
 
@@ -191,10 +196,11 @@ def test_get(code):
 def test_submit(code):
     workshop = Workshop.query.filter_by(code=code).first_or_404()
 
-    
+    # Teilnehmer muss aus genau diesem Workshop kommen (Überprüfung)
     if session.get("workshop_id") != workshop.id or "participant_id" not in session:
         return redirect(url_for("join_get"))
 
+    # Teilnehmer-ID aus Session holen
     participant_id = session["participant_id"]
 
     # falls User erneut abgibt: alte Antworten löschen
@@ -203,10 +209,11 @@ def test_submit(code):
 
     questions = Question.query.order_by(Question.id.asc()).all()
 
+    # Antworten speichern
     for q in questions:
         val = request.form.get(f"q_{q.id}")
         if val is None:
-            # wenn JS sauber ist, passiert das nicht, aber als Absicherung:
+            # fehlende Antwort, zurück zum Test (sollte eigentlich nicht passieren aberals Absicherung))
             return redirect(url_for("test_get", code=code))
 
         a = Answer(
@@ -235,15 +242,15 @@ def results(code):
 
     # alle Answers im Workshop + Questions joinen um Dimension zu kennen
     all_answers = (
-        db.session.query(Answer, Question)
-        .join(Question, Answer.question_id == Question.id)
-        .filter(Answer.workshop_id == workshop.id)
-        .all()
+        db.session.query(Answer, Question) #alle Antworten und Fragen holen
+        .join(Question, Answer.question_id == Question.id)# Antworten mit Fragen verbinden
+        .filter(Answer.workshop_id == workshop.id) #nur Antworten des aktuellen Workshops
+        .all() #alle Ergebnisse holen
     )
 
 
 
-    # Team aggregat: pro Teilnehmer dominante Typen zählen
+    # Team-Auswertung
     team_counts = {"D": 0, "I": 0, "S": 0, "C": 0}
     team_ties = 0
     participant_scores = {}
@@ -331,7 +338,7 @@ def register_post():
     db.session.add(host)
     db.session.commit()
 
-    # direkt einloggen
+    # der Host muss sich nach der Registrierung nicht nochmal einloggen
     session["host_id"] = host.id
     session["host_name"] = host.name
     return redirect(url_for("dashboard"))
