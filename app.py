@@ -128,14 +128,19 @@ def join_get():
     return render_template("join_session.html")
 
 
-from sqlalchemy import func
-import secrets
+
+
+
 
 def dominant_types(scores):
     if not scores:
         return []
     max_value = max(scores.values())
     return [key for key, value in scores.items() if value == max_value]
+
+
+
+
 
 @app.route("/join", methods=["POST"])
 def join_post():
