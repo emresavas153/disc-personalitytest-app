@@ -179,19 +179,102 @@ def join_post():
 
 
 
-@app.route("/workshops/<code>/test", methods=["GET"])
+@app.route("/workshops/<code>/test", methods=["GET", "POST"])
 def test_get(code):
     workshop = Workshop.query.filter_by(code=code).first_or_404()
 
-    
     # Teilnehmer muss aus genau diesem Workshop kommen
     if session.get("workshop_id") != workshop.id or "participant_id" not in session:
         return redirect(url_for("join_get"))
 
     questions = Question.query.order_by(Question.id.asc()).all()
+    total = len(questions)
+    if total == 0:
+        return redirect(url_for("join_get"))
 
-    # Fullscreen für Quiz
-    return render_template("test.html", code=code, questions=questions, fullscreen=True)
+    if session.get("quiz_workshop_id") != workshop.id:
+        session["quiz_workshop_id"] = workshop.id
+        session["quiz_answers"] = {}
+
+    answers = session.get("quiz_answers", {})
+    error = None
+
+    if request.method == "POST":
+        try:
+            step = int(request.form.get("step", 0))
+        except ValueError:
+            step = 0
+
+        action = request.form.get("action", "next")
+        step = max(0, min(step, total - 1))
+        current_question = questions[step]
+        answer_value = request.form.get("answer")
+
+        if answer_value:
+            answers[str(current_question.id)] = answer_value
+            session["quiz_answers"] = answers
+
+        is_answered = str(current_question.id) in answers
+        if action in ("next", "submit") and not is_answered:
+            error = "Bitte eine Antwort auswählen."
+        elif action == "prev":
+            step = max(step - 1, 0)
+        elif action == "next":
+            step = min(step + 1, total - 1)
+        elif action == "submit":
+            missing_index = next(
+                (i for i, q in enumerate(questions) if str(q.id) not in answers),
+                None,
+            )
+            if missing_index is not None:
+                step = missing_index
+                error = "Bitte alle Fragen beantworten."
+            else:
+                participant_id = session["participant_id"]
+                Answer.query.filter_by(
+                    workshop_id=workshop.id,
+                    participant_id=participant_id,
+                ).delete()
+                db.session.commit()
+
+                for q in questions:
+                    val = answers.get(str(q.id))
+                    if val is None:
+                        continue
+                    a = Answer(
+                        value=int(val),
+                        participant_id=participant_id,
+                        question_id=q.id,
+                        workshop_id=workshop.id,
+                    )
+                    db.session.add(a)
+
+                db.session.commit()
+                session.pop("quiz_answers", None)
+                session.pop("quiz_workshop_id", None)
+                return redirect(url_for("results", code=code))
+    else:
+        try:
+            step = int(request.args.get("step", 0))
+        except ValueError:
+            step = 0
+
+    step = max(0, min(step, total - 1))
+    current_question = questions[step]
+    selected = answers.get(str(current_question.id))
+    progress_pct = round(((step + 1) / total) * 100)
+
+    return render_template(
+        "test.html",
+        code=code,
+        question=current_question,
+        step=step,
+        total=total,
+        selected=selected,
+        progress_pct=progress_pct,
+        error=error,
+        fullscreen=True,
+    )
 
 
 
@@ -205,22 +288,26 @@ def test_submit(code):
     if session.get("workshop_id") != workshop.id or "participant_id" not in session:
         return redirect(url_for("join_get"))
 
-    # Teilnehmer-ID aus Session holen
     participant_id = session["participant_id"]
+    questions = Question.query.order_by(Question.id.asc()).all()
 
-    # falls User erneut abgibt: alte Antworten löschen
+    answers = session.get("quiz_answers", {})
+    if not answers:
+        for q in questions:
+            val = request.form.get(f"q_{q.id}")
+            if val is not None:
+                answers[str(q.id)] = val
+
+    if len(answers) < len(questions):
+        return redirect(url_for("test_get", code=code))
+
     Answer.query.filter_by(workshop_id=workshop.id, participant_id=participant_id).delete()
     db.session.commit()
 
-    questions = Question.query.order_by(Question.id.asc()).all()
-
-    # Antworten speichern
     for q in questions:
-        val = request.form.get(f"q_{q.id}")
+        val = answers.get(str(q.id))
         if val is None:
-            # fehlende Antwort, zurück zum Test (sollte eigentlich nicht passieren aberals Absicherung))
-            return redirect(url_for("test_get", code=code))
-
+            continue
         a = Answer(
             value=int(val),
             participant_id=participant_id,
@@ -230,6 +317,8 @@ def test_submit(code):
         db.session.add(a)
 
     db.session.commit()
+    session.pop("quiz_answers", None)
+    session.pop("quiz_workshop_id", None)
     return redirect(url_for("results", code=code))
 
 
