@@ -10,7 +10,7 @@ Gewissenhaft (C) – und hilft dabei, Kommunikations- und Teamdynamiken besser z
 ### Emre Savas
 
 About
-: 22 Jahre alt, B. Sc. Wirtschaftsinformatik, ...
+: 22 Jahre alt, B. Sc. Wirtschaftsinformatik, Zuständig für Backend und Datenbank
 
 Matr.-Nr.
 : 77204700919
@@ -18,7 +18,7 @@ Matr.-Nr.
 ### Patman Safi
 
 About
-: 22 Jahre alt, B. Sc. Wirtschaftsinformatik, ... 
+: 22 Jahre alt, B. Sc. Wirtschaftsinformatik, Zuständig für Frontend und Design
 
 Matr.-Nr.
 : 77211921777
