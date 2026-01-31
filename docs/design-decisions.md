@@ -7,7 +7,7 @@ nav_order: 3
 [Jane Dane]
 
 {: .no_toc }
-# Design decisions
+# Datenbank
 
 <details open markdown="block">
 {: .text-delta }
@@ -16,77 +16,118 @@ nav_order: 3
 {: toc }
 </details>
 
-## 01: [Title]
+## 01: Datenbank (SQLite + SQLAlchemy):
 
 ### Meta
 
 Status
-: **Work in progress** - Decided - Obsolete
+: Decided
 
 Updated
-: DD-MMM-YYYY
+: 31-01-2026
 
 ### Problem statement
 
-[Describe the problem to be solved or the goal to be achieved. Include relevant context information.]
+Wir benötigen eine Datenbank, die lokal ohne zusätzliche Infrastruktur läuft und sich unkompliziert in unsere Flask-App integrieren lässt. Außerdem soll die Lösung später erweiterbar bleiben.
 
 ### Decision
 
-[Describe **which** design decision was taken for **what reason** and by **whom**.]
+Wir nutzen SQLite als lokale Datenbank und greifen über SQLAlchemy darauf zu. So bleiben Setup und Deployment einfach, während das ORM eine spätere Migration auf ein anderes Datenbanksystem ermöglicht.
 
 ### Regarded options
 
-[Describe any possible design decision that will solve the problem. Assess these options, e.g., via a simple pro/con list.]
+- SQLite + SQLAlchemy ✔️
+- nur direktes SQL
 
 ---
 
-## [Example, delete this section] 01: How to access the database - SQL or SQLAlchemy 
+## 02: UI-Design mit CSS und eigenen Templates
 
 ### Meta
 
 Status
-: Work in progress - **Decided** - Obsolete
+: Decided
 
 Updated
 : 30-Jun-2024
 
 ### Problem statement
 
-Should we perform database CRUD (create, read, update, delete) operations by writing plain SQL or by using SQLAlchemy as object-relational mapper?
+Wir wollen ein ansprechendes, konsistentes Design bei vertretbarem Aufwand. Gleichzeitig soll das Team die HTML-Struktur selbst verstehen und anpassen können.
 
-Our web application is written in Python with Flask and connects to an SQLite database. To complete the current project, this setup is sufficient.
-
-We intend to scale up the application later on, since we see substantial business value in it.
-
-
-
-Therefore, we will likely:
-Therefore, we will likely:
-Therefore, we will likely:
-
-+ Change the database schema multiple times along the way, and
-+ Switch to a more capable database system at some point.
 
 ### Decision
 
-We stick with plain SQL.
+Das Styling (style.css) wurde mit Unterstützung von KI (ChatGPT) erstellt, um schnell eine moderne Optik zu erreichen. Die HTML-Templates wurden von uns selbst erstellt und angepasst, damit wir die Struktur vollständig kontrollieren können
 
-Our team still has to come to grips with various technologies new to us, like Python and CSS. Adding another element to our stack will slow us down at the moment.
-
-Also, it is likely we will completely re-write the app after MVP validation. This will create the opportunity to revise tech choices in roughly 4-6 months from now.
-*Decision was taken by:* github.com/joe, github.com/jane, github.com/maxi
 
 ### Regarded options
 
-We regarded two alternative options:
-
-+ Plain SQL
-+ SQLAlchemy
-
-| Criterion | Plain SQL | SQLAlchemy |
-| --- | --- | --- |
-| **Know-how** | ✔️ We know how to write SQL | ❌ We must learn ORM concept & SQLAlchemy |
-| **Change DB schema** | ❌ SQL scattered across code | ❔ Good: classes, bad: need Alembic on top |
-| **Switch DB engine** | ❌ Different SQL dialect | ✔️ Abstracts away DB engine |
+- KI-unterstütztes CSS + eigene HTML-Templates ✔️
+- Komplettes Design vollständig manuell
+- Fertiges UI-Framework (z. B. Bootstrap)
 
 ---
+
+## 03: Rollenmodell mit Host und Teilnehmenden
+
+### Meta
+
+Status
+: Decided
+
+Updated
+: 30-Jun-2024
+
+### Problem statement
+
+Im Workshop-Kontext benötigen wir unterschiedliche Funktionen: Hosts erstellen und steuern Workshops, Teilnehmende sollen schnell ohne Registrierung starten können.
+
+
+
+### Decision
+
+Wir trennen klar zwischen Host und Teilnehmenden. So bleibt die Bedienung für beide Rollen klar und sicher.
+
+#### Host-Featuress:
+- Login & Register
+- Workshops erstellen
+- Liste aller erstellten Workshops
+- Workshops schließen und öffnen
+- Einsehen auf: Namen der Teilnehmenden & Teamergebnisse, jedoch nicht die Ergebnisse der einzelnen Teilnehmer
+
+#### Teilnehmer-Features:
+- Workshop beitreten
+- Fragen beantworten und Fragebogen absolvieren
+- Einsehen auf: eigenes Ergebnis und Teamergebnis
+
+### Regarded options
+
+- Host- und Teilnehmendenrollen ✔️
+- Ein gemeinsamer Nutzer-Typ für alle
+- Vollständige Registrierung für alle Teilnehmenden
+
+---
+## 04: Workshop-Zugang über Codes
+
+### Meta
+
+Status
+: Decided
+
+Updated
+: 30-Jun-2024
+
+### Problem statement
+
+Teilnehmende sollen schnell in einen Workshop einsteigen können, ohne dass sie ein Konto anlegen müssen. Gleichzeitig müssen Hosts ihren Workshop gezielt öffnen und schließen können.
+
+### Decision
+
+Wir verwenden Workshop-Codes, die Hosts erstellen und teilen. Teilnehmende geben nur Name und Code ein. Das hält den Einstieg niedrigschwellig und ermöglicht dennoch Kontrolle über den Zugang.
+
+### Regarded options
+
+- Workshop-Code (gewählt) ✔️
+- Öffentlicher Link ohne Steuerung
+- Teilnahme nur mit registriertem Nutzerkonto
