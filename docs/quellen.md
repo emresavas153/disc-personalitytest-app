@@ -12,8 +12,8 @@ Patman Safi; Emre Savas
 
 __Coding-Hilfe__
 + Eck, H. (2025, 11. Dezember).  Full-Stack Web Dev. HWR Berlin. https://hwrberlin.github.io/fswd/
-+ W3Schools (o. J.). CSS Tutorial. https://www.w3schools.com/css/
-+ W3Schools (o. J.). SQL Tutorial. https://www.w3schools.com/sql/
++ W3Schools. CSS Tutorial. https://www.w3schools.com/css/
++ W3Schools. SQL Tutorial. https://www.w3schools.com/sql/
 + MDN Web Docs. Core learning modules. https://developer.mozilla.org/en-US/docs/Learn_web_development/Core
 
 __DISC Inhalte & Knowledge__
