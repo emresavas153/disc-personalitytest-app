@@ -5,7 +5,7 @@ nav_order: 4
 ---
 
 {: .label }
-[Patman Safi; Emre Savas]
+Patman Safi; Emre Savas
 
 {: .no_toc }
 # Summary of individual contributions

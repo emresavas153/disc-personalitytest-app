@@ -5,7 +5,7 @@ nav_order: 3
 ---
 
 {: .label }
-[Patman Safi; Emre Savas]
+Patman Safi; Emre Savas
 
 {: .no_toc }
 # Peer review

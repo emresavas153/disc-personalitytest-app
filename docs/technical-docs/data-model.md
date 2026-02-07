@@ -4,6 +4,10 @@ parent: Technical Docs
 nav_order: 2
 ---
 
+{: .label }
+Patman Safi; Emre Savas
+
+{: .no_toc }
 # Data model
 
 ![ER Diagram](../assets/images/erd.png)

@@ -5,6 +5,6 @@ nav_order: 5
 ---
 
 {: .label }
-[Patman Safi; Emre Savas]
+Patman Safi; Emre Savas
 
 # Team evaluation

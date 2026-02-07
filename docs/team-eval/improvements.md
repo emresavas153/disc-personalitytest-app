@@ -5,7 +5,7 @@ nav_order: 2
 ---
 
 {: .label }
-[Patman Safi; Emre Savas]
+Patman Safi; Emre Savas
 
 {: .no_toc }
 # How we would improve next time

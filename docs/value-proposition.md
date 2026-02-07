@@ -4,7 +4,7 @@ nav_order: 1
 ---
 
 {: .label }
-[Patman Safi; Emre Savas]
+Patman Safi; Emre Savas
 
 {: .no_toc }
 # Value proposition
