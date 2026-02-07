@@ -38,7 +38,7 @@ nav_order: 3
 
 **Route:** `/login`
 
-**Methods:** `GET`
+**Methods:** `GET` `POST`
 
 **Purpose:** Login für den Host; Weiterleitung auf Registrierung falls kein Account aneglegt
 
@@ -52,13 +52,13 @@ nav_order: 3
 
 **Route:** `/register`
 
-**Methods:** `GET`
+**Methods:** `GET` `POST`
 
-**Purpose:** Registrierung für einen neuen Host Account
+**Purpose:** Registrierung für einen neuen Host Account; zurück zum Login
 
 **Sample output:**
 
-![host_register](../assets/images/host_regsiter.png)
+![host_register](../assets/images/host_register.png)
 
 ---
 
@@ -70,7 +70,7 @@ nav_order: 3
 
 **Purpose:** Liste mit allen erstellten Workshops; Weiterleiten zum erstellen eines neuen
 
-**Sample output:** ![host_dashboard](../assets/images/host_dashboard)
+**Sample output:** ![host_dashboard](../assets/images/host_dashboard.png)
 
 ---
 
@@ -80,7 +80,7 @@ nav_order: 3
 
 **Methods:** `GET`
 
-**Purpose:** Registrierung für einen neuen Host Account
+**Purpose:** Erstellen eines neuen Workshops
 
 **Sample output:**
 
@@ -90,15 +90,15 @@ nav_order: 3
 
 ## Overview Workshop
 
-**Route:** `/workshops/<code>/new`
+**Route:** `/workshops/<code>/host`
 
 **Methods:** `GET`
 
-**Purpose:** Der Host hat eine Übersicht über den erstellten Workshop und sieht: code, status, Team Ergebnisse und die Teilnehmer
+**Purpose:** Der Host hat eine Übersicht über den erstellten Workshop und sieht: code, status, Team-Ergebnisse und die Teilnehmer
 
 **Sample output:**
 
-![create_workshop](../assets/images/create_workshop.png)
+![overview_workshop](../assets/images/overview_workshop.png)
 
 ---
 
@@ -108,7 +108,7 @@ nav_order: 3
 
 **Route:** `/join`
 
-**Methods:** `GET`
+**Methods:** `GET` `POST`
 
 **Purpose:** Der Teilnehmer gibt seinen Namen und den Workshop Code ein
 
@@ -122,7 +122,7 @@ nav_order: 3
 
 **Route:** `/workshops/<code>/test`
 
-**Methods:** `GET`
+**Methods:** `GET``POST`
 
 **Purpose:** Der Teilnehmer beantwortet die Fragen(1(trifft gar nicht zu) bis 5(trifft voll und gaz zu))
 
@@ -134,7 +134,7 @@ nav_order: 3
 
 ## Ergebnisse
 
-**Route:** `/workshops/<code>/test`
+**Route:** `/workshops/<code>/results`
 
 **Methods:** `GET`
 
