@@ -5,7 +5,7 @@ nav_order: 4
 ---
 
 {: .label }
-[Jane Dane]
+[Patman Safi; Emre Savas]
 
 {: .no_toc }
 # Summary of individual contributions
@@ -17,16 +17,21 @@ nav_order: 4
 {: toc }
 </details>
 
-## [Patman Safi]
+## Patman Safi
 
-Contributions
-: Lorem ipsum dolor
-: Consetetur sadipscing elitr
-: ...
+__Contributions:__
 
-## [Emre Savas]
++ Umsetzung und Gestaltung Frontend-Bestandteile der Anwendung
++ Strukturierung und Implementierung wiederverwendbarer UI-Komponenten
++ Design der Benutzeroberfläche inkl. konsistenter Typografie, Abstände und visueller Hierarchie
++ Umsetzung der Screens für Teilnehmer- und Host-Ansicht
 
-Contributions
-: Diam nonumy eirmod
-: Tempor invidunt ut labore
-: ...
+## Emre Savas
+
+__Contributions:__
+
++ Implementierung der Backend-Logik für Testablauf und DISC-Auswertung
++ Entwicklung der Verarbeitung von Antworten und Berechnung der Ergebnisse
++ Strukturierung der Datenmodelle und Anbindung der Datenbank
++ Speicherung von Tests, Nutzern und Workshop-Daten
++ Technische Strukturierung der Projektarchitektur (Routen, Logiktrennung, Response-Formate)
