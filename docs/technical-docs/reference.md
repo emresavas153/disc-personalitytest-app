@@ -29,6 +29,7 @@ nav_order: 3
 **Sample output:**
 
 ![index](../assets/images/index.png)
+
 ---
 # Host-Screens
 
