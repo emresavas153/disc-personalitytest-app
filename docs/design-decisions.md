@@ -41,35 +41,7 @@ Wir nutzen SQLite als lokale Datenbank und greifen über SQLAlchemy darauf zu. S
 
 ---
 
-## 02: UI-Design mit CSS und eigenen Templates
-
-### Meta
-
-Status
-: Decided
-
-Updated
-: 30-Jun-2024
-
-### Problem statement
-
-Wir wollen ein ansprechendes, konsistentes Design bei vertretbarem Aufwand. Gleichzeitig soll das Team die HTML-Struktur selbst verstehen und anpassen können.
-
-
-### Decision
-
-Das Styling (style.css) wurde mit Unterstützung von KI (ChatGPT) erstellt, um schnell eine moderne Optik zu erreichen. Die HTML-Templates wurden von uns selbst erstellt und angepasst, damit wir die Struktur vollständig kontrollieren können
-
-
-### Regarded options
-
-- KI-unterstütztes CSS + eigene HTML-Templates ✔️
-- Komplettes Design vollständig manuell
-- Fertiges UI-Framework (z. B. Bootstrap)
-
----
-
-## 03: Rollenmodell mit Host und Teilnehmenden
+## 02: Rollenmodell mit Host und Teilnehmenden
 
 ### Meta
 
@@ -82,8 +54,6 @@ Updated
 ### Problem statement
 
 Im Workshop-Kontext benötigen wir unterschiedliche Funktionen: Hosts erstellen und steuern Workshops, Teilnehmende sollen schnell ohne Registrierung starten können.
-
-
 
 ### Decision
 
@@ -108,6 +78,33 @@ Wir trennen klar zwischen Host und Teilnehmenden. So bleibt die Bedienung für b
 - Vollständige Registrierung für alle Teilnehmenden
 
 ---
+
+## 03: UI-Design mit CSS und eigenen Templates
+
+### Meta
+
+Status
+: Decided
+
+Updated
+: 30-Jun-2024
+
+### Problem statement
+
+Wir wollen ein ansprechendes, konsistentes Design bei vertretbarem Aufwand. Gleichzeitig soll das Team die HTML-Struktur selbst verstehen und anpassen können.
+
+
+### Decision
+
+Das Styling (style.css) wurde von uns selbst erstellt, um schnell eine moderne und konsistente Optik zu erreichen. Die HTML-Templates wurden ebenfalls von uns selbst entwickelt und angepasst, damit wir die Struktur vollständig kontrollieren und vom Team jederzeit verstehen sowie flexibel weiterentwickeln lassen können.
+
+### Regarded options
+
+- Selbst ersetellte CSS + HTML-Templates ✔️
+- Fertiges UI-Framework (z. B. Bootstrap)
+
+---
+
 ## 04: Workshop-Zugang über Codes
 
 ### Meta
