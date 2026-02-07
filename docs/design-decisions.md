@@ -6,8 +6,6 @@ nav_order: 3
 {: .label }
 Patman Safi; Emre Savas
 
-{: .no_toc }[Patman Safi; Emre Savas]
-
 {: .no_toc }
 # Datenbank
 
