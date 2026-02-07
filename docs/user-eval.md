@@ -16,8 +16,6 @@ nav_order: 4
 {: toc }
 </details>
 
-## 01: [Title]
-
 ### Meta
 
 Status
@@ -36,16 +34,16 @@ Für die Evaluation wurden Usability‑Tests mit 8 Testpersonen durchgeführt. D
 
 ### Results
 
-#### Quiz als Teilnehmer absolvieren
+**Quiz als Teilnehmer absolvieren**
 + durchschnittliche Bearbeitungszeit: 14 Minuten
 + alle Teilnehmenden verstanden den Ablauf
 + Die Ergebnidarstellung wurde als hilfreich beschrieben, jedoch gingen die Team-Ergebnisse für die Teilnehmer (nicht für den Host) optisch etwas unter und einige Teilnehmer wünschten sich eine etwas ausführlichere Erklärung oder klare Handlungsempfehlungen
 
-#### Host Account erstellen
+**Host Account erstellen**
 + durchschnittliche Bearbeitungszeit: 2 Minuten
 + alle Teilnehmenden konnten den Account ohne Hilfe anlegen
 
-#### Neuen Workshop anlegen und verwalten
+**Neuen Workshop anlegen und verwalten**
 + durchschnittliche Bearbeitungszeit: 4–6 Minuten
 + der Ablauf zum Erstellen eines Workshops wurde als logisch beschrieben
 
@@ -54,15 +52,18 @@ Die Evaluation zeigt insgesamt ein sehr positives Bild: Die zentralen Abläufe w
 
 Aus der Evaluation lassen sich jedoch mehrere konkrete Handlungsempfehlungen ableiten:
 
-1. _Optimierung der Ergebnisdarstellung für Teilnehmende_
+1. **Optimierung der Ergebnisdarstellung für Teilnehmende**
+   
 Obwohl die Resultate als hilfreich wahrgenommen wurden, gingen die Team-Ergebnisse visuell teilweise unter. Hier besteht Potenzial für eine stärkere visuelle Hierarchisierung (z. B. klarere Abgrenzung, Hervorhebung oder zusätzliche visuelle Elemente), um die Relevanz dieser Informationen deutlicher zu machen.
 Zudem äußerten einige Teilnehmende den Wunsch nach ausführlicheren Erklärungen oder konkreten Handlungsempfehlungen. Daraus lässt sich ableiten, dass neben der reinen Ergebnisdarstellung auch die Interpretation stärker unterstützt werden sollte – etwa durch kurze, verständliche Textbausteine wie „Das bedeutet für dich…“ oder „Im Teamkontext kann das heißen…“.
 
-2. *Feinjustierung statt grundlegender Umstrukturierung*
+3. **Feinjustierung statt grundlegender Umstrukturierung**
+   
 Da alle Kernaufgaben (Quiz absolvieren, Account erstellen, Workshop anlegen) ohne Hilfe bewältigt wurden und die durchschnittlichen Bearbeitungszeiten im erwarteten Rahmen lagen, sind keine grundlegenden strukturellen Änderungen erforderlich.
 Die Erkenntnis aus der Evaluation ist daher weniger eine Frage der Funktionalität, sondern vielmehr der inhaltlichen und visuellen Verfeinerung.
 
-3. *Bestätigung der Usability-Basis*
+5. **Bestätigung der Usability-Basis**
+   
 Ein zentraler Punkt, der aus der Evaluation gezogen werden kann, ist die Bestätigung der bestehenden Design- und Interaktionsentscheidungen. Die Anwendung besitzt bereits eine solide Usability-Basis, insbesondere hinsichtlich:
 + Klarheit der Abläufe
 + Verständlichkeit der Navigation
