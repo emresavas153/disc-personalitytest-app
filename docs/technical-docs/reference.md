@@ -10,12 +10,6 @@ nav_order: 3
 {: .no_toc }
 # Reference documentation
 
-{: .attention }
-> This page collects internal functions, routes with their functions, and APIs (if any).
-> 
-> See [Uber](https://developer.uber.com/docs/drivers/references/api) or [PayPal](https://developer.paypal.com/api/rest/) for exemplary high-quality API reference documentation.
->
-> You may delete this `attention` box.
 
 <details open markdown="block">
 {: .text-delta }
@@ -24,62 +18,129 @@ nav_order: 3
 {: toc }
 </details>
 
-## [Section / module]
+## Home
 
-### `function_definition()`
-
-**Route:** `/route/`
-
-**Methods:** `POST` `GET` `PATCH` `PUT` `DELETE`
-
-**Purpose:** [Short explanation of what the function does and why]
-
-**Sample output:**
-
-[Show an image, string output, or similar illustration -- or write NONE if function generates no output]
-
----
-
-## [Example, delete this section] Show to-do lists
-
-### `get_lists()`
-
-**Route:** `/lists/`
+**Route:** `/`
 
 **Methods:** `GET`
 
-**Purpose:** Show all to-do lists.
+**Purpose:** Homescreen; der Nutzer gibt an ob er Host oder Teilnehmer ist
 
 **Sample output:**
 
-![get_lists() sample](../assets/images/fswd-intro_00.png)
-
+![index](../assets/images/index.png)
 ---
+# Host-Screens
 
-### `get_list_todos(list_id)`
 
-**Route:** `/lists/<int:list_id>`
+## Host Login
+
+**Route:** `/login`
 
 **Methods:** `GET`
 
-**Purpose:** Retrieve all to-do items of to-do list with ID `list_id` from database and present to user.
+**Purpose:** Login für den Host; Weiterleitung auf Registrierung falls kein Account aneglegt
 
 **Sample output:**
 
-![get_list_todos() sample](../assets/images/fswd-intro_02.png)
+![host_login](../assets/images/host_login.png)
 
 ---
 
-## [Example, delete this section] Insert sample data
+## Host Register
 
-### `run_insert_sample()`
-
-**Route:** `/insert/sample`
+**Route:** `/register`
 
 **Methods:** `GET`
 
-**Purpose:** Flush the database and insert sample data set
+**Purpose:** Registrierung für einen neuen Host Account
 
 **Sample output:**
 
-Browser shows: `Database flushed and populated with some sample data.`
+![host_register](../assets/images/host_regsiter.png)
+
+---
+
+## Host Dashboard
+
+**Route:** `/dashboard`
+
+**Methods:** `GET`
+
+**Purpose:** Liste mit allen erstellten Workshops; Weiterleiten zum erstellen eines neuen
+
+**Sample output:** ![host_dashboard](../assets/images/host_dashboard)
+
+---
+
+## Create Workshop
+
+**Route:** `/workshops/new`
+
+**Methods:** `GET`
+
+**Purpose:** Registrierung für einen neuen Host Account
+
+**Sample output:**
+
+![create_workshop](../assets/images/create_workshop.png)
+
+---
+
+## Overview Workshop
+
+**Route:** `/workshops/<code>/new`
+
+**Methods:** `GET`
+
+**Purpose:** Der Host hat eine Übersicht über den erstellten Workshop und sieht: code, status, Team Ergebnisse und die Teilnehmer
+
+**Sample output:**
+
+![create_workshop](../assets/images/create_workshop.png)
+
+---
+
+# Teilnehmer-Screens
+
+## Join Workshop
+
+**Route:** `/join`
+
+**Methods:** `GET`
+
+**Purpose:** Der Teilnehmer gibt seinen Namen und den Workshop Code ein
+
+**Sample output:**
+
+![join](../assets/images/join.png)
+
+---
+
+## Test
+
+**Route:** `/workshops/<code>/test`
+
+**Methods:** `GET`
+
+**Purpose:** Der Teilnehmer beantwortet die Fragen(1(trifft gar nicht zu) bis 5(trifft voll und gaz zu))
+
+**Sample output:**
+
+![user_test](../assets/images/user_test.png)
+
+---
+
+## Ergebnisse
+
+**Route:** `/workshops/<code>/test`
+
+**Methods:** `GET`
+
+**Purpose:** Der Teilnehmer sieht seine eigenen Ergebnisse, die Ergebnisse des Teams und einen Informationstext zu den unterschiedlichen Typen
+
+**Sample output:**
+
+![results](../assets/images/results.png)
+![results2](../assets/images/results2.png)
+
