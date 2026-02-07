@@ -25,4 +25,4 @@ __KI-Verzeichnis__
 
 | Nr | KI basiertes Hilfsmittel | Einsatzform, Verwendungszweck            | Betroffene Teile der Arbeit | Bemerkungen, Vorgehensweise, Prompts                                                      |
 |----|--------------------------|------------------------------------------|-----------------------------|-------------------------------------------------------------------------------------------|
-| 1  | ChatGPt                  | Erstellung der Fragen für den Fragebogen | app.sqlite questions        | Prompts auf folgendem Link: https://chatgpt.com/share/6987bf01-62ac-8004-93cc-68a476c12016|
+| 1  | ChatGPT                  | Erstellung der Fragen für den Fragebogen | app.sqlite questions        | Prompts auf folgendem Link: https://chatgpt.com/share/6987bf01-62ac-8004-93cc-68a476c12016|
