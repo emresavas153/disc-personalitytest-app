@@ -52,17 +52,17 @@ Die Evaluation zeigt insgesamt ein sehr positives Bild: Die zentralen Abläufe w
 
 Aus der Evaluation lassen sich jedoch mehrere konkrete Handlungsempfehlungen ableiten:
 
-1. **Optimierung der Ergebnisdarstellung für Teilnehmende**
+**1. Optimierung der Ergebnisdarstellung für Teilnehmende**
    
 Obwohl die Resultate als hilfreich wahrgenommen wurden, gingen die Team-Ergebnisse visuell teilweise unter. Hier besteht Potenzial für eine stärkere visuelle Hierarchisierung (z. B. klarere Abgrenzung, Hervorhebung oder zusätzliche visuelle Elemente), um die Relevanz dieser Informationen deutlicher zu machen.
 Zudem äußerten einige Teilnehmende den Wunsch nach ausführlicheren Erklärungen oder konkreten Handlungsempfehlungen. Daraus lässt sich ableiten, dass neben der reinen Ergebnisdarstellung auch die Interpretation stärker unterstützt werden sollte – etwa durch kurze, verständliche Textbausteine wie „Das bedeutet für dich…“ oder „Im Teamkontext kann das heißen…“.
 
-3. **Feinjustierung statt grundlegender Umstrukturierung**
+**2. Feinjustierung statt grundlegender Umstrukturierung**
    
 Da alle Kernaufgaben (Quiz absolvieren, Account erstellen, Workshop anlegen) ohne Hilfe bewältigt wurden und die durchschnittlichen Bearbeitungszeiten im erwarteten Rahmen lagen, sind keine grundlegenden strukturellen Änderungen erforderlich.
 Die Erkenntnis aus der Evaluation ist daher weniger eine Frage der Funktionalität, sondern vielmehr der inhaltlichen und visuellen Verfeinerung.
 
-5. **Bestätigung der Usability-Basis**
+**3. Bestätigung der Usability-Basis**
    
 Ein zentraler Punkt, der aus der Evaluation gezogen werden kann, ist die Bestätigung der bestehenden Design- und Interaktionsentscheidungen. Die Anwendung besitzt bereits eine solide Usability-Basis, insbesondere hinsichtlich:
 + Klarheit der Abläufe
